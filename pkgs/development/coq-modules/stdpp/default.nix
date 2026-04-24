@@ -55,8 +55,11 @@ let
     };
   };
 in
-# this is just a wrapper for rocqPackages.stdpp for Rocq >= 9.0
-if coq.rocqPackages ? stdpp then
+let
+  useRocqPackages =
+    if builtins.isNull version then coq.rocqPackages ? stdpp else lib.versionAtLeast version "1.13.0";
+in
+if useRocqPackages then
   coq.rocqPackages.stdpp.override {
     inherit version stdlib;
     inherit (coq.rocqPackages) rocq-core;
